@@ -3,6 +3,7 @@ import { hash } from 'bcryptjs';
 import { getCustomRepository } from 'typeorm';
 import UsersRepository from '../repositories/UsersRepository';
 import User from '../models/User';
+import AppError from '../errors/AppError';
 
 interface NewUser {
   username: string;
@@ -25,7 +26,7 @@ class UserService {
       where: [{ username }, { email }],
     });
 
-    if (findUser) throw new Error('Username/Email already exist.');
+    if (findUser) throw new AppError('Username/Email already exist.');
 
     const hashedPassword = await hash(password, 8);
     const newUser = userRepository.create({
